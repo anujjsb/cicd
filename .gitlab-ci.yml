@@ -2,17 +2,24 @@ stages:
   - check
   - deploy
 
+before_script:
+    - echo "Installing Node.js and npm"
+    - apk add --no-cache nodejs npm
+
+    - echo "Checking Node.js and npm"
+    - node --version
+    - npm --version
+
+    - echo "Installing Salesforce CLI"
+    - npm install --global @salesforce/cli
+
+    - echo "Checking Salesforce CLI"
+    - sf --version
+
 check-runner:
   stage: check
   script:
     - sf --version
-
-before_script:
-  - echo "installing salesforce CLI BEGIN"
-  - node --version
-  - npm --version
-  - npm install -g @salesforce/cli
-  - echo "installing salesforce CLI END"
 
 deploy-apex:
   stage: deploy
