@@ -7,9 +7,15 @@ check-runner:
   script:
     - sf --version
 
+before_script:
+  - echo "installing salesforce CLI BEGIN"
+  - npm install -g @salesforce/cli
+  - echo "installing salesforce CLI END"
+
 deploy-apex:
   stage: deploy
   before_script:
+    - echo "Logging into Salesforce org using JWT authentication"
     - sf org login jwt --username $SF_USERNAME --client-id $SF_CLIENT_ID --jwt-key-file $SF_JWT_KEY --instance-url $SF_INSTANCE_URL --alias target-org
 
   script:
