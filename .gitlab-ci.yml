@@ -10,7 +10,7 @@ check-runner:
 deploy-apex:
   stage: deploy
   before_script:
-    - sf org login jwt --username "anujpal.62bac3eef4d4@agentforce.com" --client-id "3MVG9GCMQoQ6rpzRdWY.pcLSz0zC5Z69YpVEeHw8Zb7I0Y6XFUj5R_hZqtWmvf94TaeTUKrnXgaqjr_7v_idw" --jwt-key-file certs/server.key --instance-url https://login.salesforce.com --alias target-org
+    - sf org login jwt --username $SF_USERNAME --client-id $SF_CLIENT_ID --jwt-key-file $SF_JWT_KEY --instance-url $SF_INSTANCE_URL --alias target-org
 
   script:
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --target-org target-org
