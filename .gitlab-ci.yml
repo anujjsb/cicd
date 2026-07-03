@@ -22,4 +22,4 @@ deploy-apex:
 
   script:
     - echo "Deploying Apex class"
-    - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --target-org target-org
+    - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:abcGetChartData --target-org target-org
