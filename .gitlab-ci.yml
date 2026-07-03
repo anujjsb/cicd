@@ -1,3 +1,5 @@
+image: node:20
+
 stages:
   - deploy
 
@@ -5,15 +7,9 @@ deploy-apex:
   stage: deploy
 
   before_script:
-    - echo "Installing Node.js, npm and GNU coreutils"
-    - apk add --no-cache nodejs npm coreutils
-
     - echo "Checking Node.js and npm"
     - node --version
     - npm --version
-
-    - echo "Checking env implementation"
-    - env --version
 
     - echo "Installing Salesforce CLI"
     - npm install --global @salesforce/cli
