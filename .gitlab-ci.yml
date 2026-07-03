@@ -1,8 +1,10 @@
 stages:
-  - check
   - deploy
 
-before_script:
+deploy-apex:
+  stage: deploy
+
+  before_script:
     - echo "Installing Node.js and npm"
     - apk add --no-cache nodejs npm
 
@@ -16,16 +18,9 @@ before_script:
     - echo "Checking Salesforce CLI"
     - sf --version
 
-check-runner:
-  stage: check
-  script:
-    - sf --version
-
-deploy-apex:
-  stage: deploy
-  before_script:
     - echo "Logging into Salesforce org using JWT authentication"
-    - sf org login jwt --username $SF_USERNAME --client-id $SF_CLIENT_ID --jwt-key-file $SF_JWT_KEY --instance-url $SF_INSTANCE_URL --alias target-org
+    - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
 
   script:
+    - echo "Deploying Apex class"
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --target-org target-org
