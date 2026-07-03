@@ -5,12 +5,15 @@ deploy-apex:
   stage: deploy
 
   before_script:
-    - echo "Installing Node.js and npm"
-    - apk add --no-cache nodejs npm
+    - echo "Installing Node.js, npm and GNU coreutils"
+    - apk add --no-cache nodejs npm coreutils
 
     - echo "Checking Node.js and npm"
     - node --version
     - npm --version
+
+    - echo "Checking env implementation"
+    - env --version
 
     - echo "Installing Salesforce CLI"
     - npm install --global @salesforce/cli
@@ -18,7 +21,7 @@ deploy-apex:
     - echo "Checking Salesforce CLI"
     - sf --version
 
-    - echo "Logging into Salesforce org using JWT authentication"
+    - echo "Logging into Salesforce using JWT"
     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
 
   script:
