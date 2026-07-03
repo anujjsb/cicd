@@ -9,6 +9,8 @@ check-runner:
 
 before_script:
   - echo "installing salesforce CLI BEGIN"
+  - node --version
+  - npm --version
   - npm install -g @salesforce/cli
   - echo "installing salesforce CLI END"
 
