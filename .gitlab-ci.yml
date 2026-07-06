@@ -3,8 +3,15 @@ image: node:20
 stages:
   - deploy
 
-deploy-apex:
+production-deploy:
   stage: deploy
+
+  environment:
+    name: production
+
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: manual
 
   before_script:
     - echo "Checking Node.js and npm"
@@ -21,5 +28,5 @@ deploy-apex:
     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
 
   script:
-    - echo "Deploying Apex class"
+    - echo "Deploying Apex classes"
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
