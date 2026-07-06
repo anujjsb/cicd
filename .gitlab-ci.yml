@@ -30,6 +30,12 @@ production-deploy:
   script:
     - echo "Deploying Apex classes"
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
-    - sf project deploy start --metadata CustomObject:customer_subscription__c --target-org target-org
+
+    - echo "Deploying dependencies object and layouts"
+    - sf project deploy start --metadata CustomObject:subscription_plan__c --metadata CustomObject:customer2__c --metadata CustomObject:customer_subscription__c --target-org target-org
+
+    - echo "Deploying addOn__c object"
     - sf project deploy start --metadata CustomObject:addOn__c --target-org target-org
+
+    - echo "Deploying addOn__c layout"
     - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
