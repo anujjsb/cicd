@@ -44,4 +44,4 @@ production-deploy:
     - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
 
     - echo "adding custom field to addOn__c object"
-    - sf project retrieve start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org source-org
+    - sf project retrieve start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org target-ort
