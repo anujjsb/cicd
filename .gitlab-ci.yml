@@ -30,5 +30,6 @@ production-deploy:
   script:
     - echo "Deploying Apex classes"
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
+    - sf project deploy start --metadata CustomObject:customer_subscription__c --target-org target-org
     - sf project deploy start --metadata CustomObject:addOn__c --target-org target-org
     - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
