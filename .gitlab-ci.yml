@@ -31,6 +31,9 @@ production-deploy:
     - echo "Deploying Apex classes"
     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
 
+    - echo "deploy service1 object"
+    - sf project deploy start --metadata CustomObject:service1__c --target-org target-org
+
     - echo "Deploying dependencies object and layouts"
     - sf project deploy start --metadata CustomObject:subscription_plan__c --metadata CustomObject:customer2__c --metadata CustomObject:customer_subscription__c --target-org target-org
 
