@@ -1,31 +1,31 @@
 image: node:20
 
 stages:
-  - deploy
   - retrieve
+  - deploy
 
 production-retrieve:
-   stage: retrieve
+  stage: retrieve
 
-   before_script:
-    - echo "Checking Node.js and npm"
-    - node --version
-    - npm --version
+  before_script:
+   - echo "Checking Node.js and npm"
+   - node --version
+   - npm --version
 
-    - echo "Installing Salesforce CLI"
-    - npm install --global @salesforce/cli
+   - echo "Installing Salesforce CLI"
+   - npm install --global @salesforce/cli
 
-    - echo "Checking Salesforce CLI"
-    - sf --version
+   - echo "Checking Salesforce CLI"
+   - sf --version
 
-    - echo 'Source org login Start!'
-    - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url "$SOURCE_INSTANCE_URL" --alias myOrg
-    - echo 'Source org successfully login!'
+   - echo 'Source org login Start!'
+   - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url "$SOURCE_INSTANCE_URL" --alias myOrg
+   - echo 'Source org successfully login!'
 
   script:
-     - echo 'Retriving an apex class from source org!'
-     - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
-     - echo 'successfully retrieve example apex class!'
+    - echo 'Retriving an apex class from source org!'
+    - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
+    - echo 'successfully retrieve example apex class!'
     
   artifacts:
     paths:
