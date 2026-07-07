@@ -5,7 +5,7 @@ stages:
   - retrieve
 
 production-retrieve:
-   stage:retrieve
+   stage: retrieve
 
    before_script:
     - echo "Checking Node.js and npm"
@@ -28,9 +28,9 @@ production-retrieve:
      - echo 'successfully retrieve example apex class!'
     
     artifacts:
-    paths:
-      - force-app/
-    expire_in: 1 hour
+      paths:
+       - force-app/
+      expire_in: 1 hour
 
 production-deploy:
   stage: deploy
