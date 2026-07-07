@@ -22,15 +22,15 @@ production-retrieve:
     - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url "$SOURCE_INSTANCE_URL" --alias myOrg
     - echo 'Source org successfully login!'
 
-    script:
+  script:
      - echo 'Retriving an apex class from source org!'
      - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
      - echo 'successfully retrieve example apex class!'
     
-    artifacts:
-      paths:
-       - force-app/
-      expire_in: 1 hour
+  artifacts:
+    paths:
+     - force-app/
+    expire_in: 1 hour
 
 production-deploy:
   stage: deploy
