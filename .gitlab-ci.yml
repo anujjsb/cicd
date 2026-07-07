@@ -1,7 +1,36 @@
 image: node:20
 
 stages:
+  - retrieve
   - deploy
+
+production-retrieve:
+  stage: retrieve
+
+  before_script:
+   - echo "Checking Node.js and npm"
+   - node --version
+   - npm --version
+
+   - echo "Installing Salesforce CLI"
+   - npm install --global @salesforce/cli
+
+   - echo "Checking Salesforce CLI"
+   - sf --version
+
+   - echo 'Source org login Start!'
+   - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url https://login.salesforce.com --alias myOrg
+   - echo 'Source org successfully login!'
+
+  script:
+    - echo 'Retriving an apex class from source org!'
+    - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
+    - echo 'successfully retrieve example apex class! Now Move to next job!'
+    
+  artifacts:
+    paths:
+     - force-app/
+    expire_in: 1 hour
 
 production-deploy:
   stage: deploy
@@ -43,5 +72,9 @@ production-deploy:
     - echo "Deploying addOn__c layout"
     - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
 
-    - echo "adding custom field to addOn__c object"
-    - sf project retrieve start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org target-org
+    # - echo "adding custom field to addOn__c object"
+    # - sf project deploy start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org target-org
+
+    - echo 'Deployment of ExampleApex start!'
+    - sf project deploy start --metadata ApexClass:exampleApex --target-org target-org
+    - echo 'Deployment finished for exampleApex class!'
