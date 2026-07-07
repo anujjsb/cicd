@@ -19,7 +19,7 @@ production-retrieve:
    - sf --version
 
    - echo 'Source org login Start!'
-   - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url "$SOURCE_INSTANCE_URL" --alias myOrg
+   - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url $https://login.salesforce.com --alias myOrg
    - echo 'Source org successfully login!'
 
   script:
