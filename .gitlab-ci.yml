@@ -25,7 +25,7 @@ production-retrieve:
   script:
     - echo 'Retriving an apex class from source org!'
     - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
-    - echo 'successfully retrieve example apex class!'
+    - echo 'successfully retrieve example apex class! Now Move to next job'
     
   artifacts:
     paths:
