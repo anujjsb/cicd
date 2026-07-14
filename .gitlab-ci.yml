@@ -85,7 +85,9 @@
 
 
 # image: node:20
-image: salesforce/cli:latest
+# image: salesforce/cli:latest-slim
+image: salesforce/cli:latest-full
+
 
 stages:
  - retrieve
