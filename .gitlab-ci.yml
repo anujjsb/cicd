@@ -92,8 +92,8 @@ stages:
  - mirror
 
 retrieve-job:
- stage: retrieve 
- before_script:
+  stage: retrieve
+  before_script:
    - echo "Checking Node.js and npm"
    - node --version
    - npm --version
