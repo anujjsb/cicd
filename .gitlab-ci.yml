@@ -112,6 +112,7 @@ retrieve-job:
     - echo 'Retriving an apex class from source org!'
     - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example2 --target-org myOrg
     - echo 'successfully retrieve example apex class! Now Move to next job!'
+    - echo 'push after changing wifi!'
     
   artifacts:
     paths:
