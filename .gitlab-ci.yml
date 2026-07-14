@@ -88,6 +88,8 @@
 # image: salesforce/cli:latest-slim
 image: salesforce/cli:latest-full
 
+variables:
+  GIT_DEPTH: 0
 
 stages:
  - retrieve
