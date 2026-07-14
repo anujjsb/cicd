@@ -145,7 +145,7 @@ deploy-job:
 
   script:
     - echo "Before deploy - "
-    - sf project start deploy --metadata ApexClass:exampleApex --metadata ApexClass:example2 --target-org target-org
+    - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example2 --target-org target-org
     - echo "After deploy to target-org successfully!"
 
 mirror-job:
@@ -161,5 +161,7 @@ mirror-job:
     - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/cicd.git
       # https://github.com/anujpal-design/Copado-firstCopadoOrgSFP.git
     - echo "Finally pushing the code!"
+    - git add force-app/
+    - git commit -m 'retrieve latest metadata from org'
     - git push --force github HEAD:main
     - echo "Successfully perform mirroring repository!"
