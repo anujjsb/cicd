@@ -147,6 +147,7 @@ deploy-job:
     - echo "Before deploy - "
     - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org target-org
     - echo "After deploy to target-org successfully!"
+    - echo "Temp echo message!"
 
 # mirror-job:
 #   stage: mirror
