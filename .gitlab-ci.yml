@@ -84,7 +84,8 @@
 #     - echo 'Deployment finished for exampleApex class!'
 
 
-image: node:20
+# image: node:20
+image: salesforce/cli:latest
 
 stages:
  - retrieve
@@ -99,7 +100,7 @@ retrieve-job:
    - npm --version
 
    - echo "Installing Salesforce CLI"
-   - npm install --global @salesforce/cli
+  #  - npm install --global @salesforce/cli
 
    - echo "Checking Salesforce CLI"
    - sf --version
@@ -131,7 +132,7 @@ deploy-job:
     - npm --version
 
     - echo "Installing Salesforce CLI"
-    - npm install --global @salesforce/cli
+    # - npm install --global @salesforce/cli
 
     - echo "Checking Salesforce CLI"
     - sf --version
