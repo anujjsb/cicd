@@ -115,7 +115,7 @@ retrieve-job:
 
   script:
     - echo 'Retriving an apex class from source org!'
-    - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example3 --target-org myOrg
+    - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org myOrg
     - echo 'successfully retrieve example apex class! Now Move to next job!'
     
   artifacts:
@@ -145,7 +145,7 @@ deploy-job:
 
   script:
     - echo "Before deploy - "
-    - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example3 --target-org target-org
+    - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org target-org
     - echo "After deploy to target-org successfully!"
 
 # mirror-job:
