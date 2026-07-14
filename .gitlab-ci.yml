@@ -156,8 +156,8 @@ mirror-job:
 
     - echo "git remote adding!"
 
-    - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/Hotel_Pos_System.git
-
+    - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/cicd.git
+      # https://github.com/anujpal-design/Copado-firstCopadoOrgSFP.git
     - echo "Finally pushing the code!"
-    - git push --force github HEAD:practiceCICD
+    - git push --force github HEAD:main
     - echo "Successfully perform mirroring repository!"
