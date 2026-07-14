@@ -159,5 +159,5 @@ mirror-job:
     - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/Hotel_Pos_System.git
 
     - echo "Finally pushing the code!"
-    - git push github HEAD:practiceCICD
+    - git push --force github HEAD:practiceCICD
     - echo "Successfully perform mirroring repository!"
