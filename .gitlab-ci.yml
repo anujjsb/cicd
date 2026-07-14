@@ -1,13 +1,99 @@
+# image: node:20
+
+# stages:
+#   - retrieve
+#   - deploy
+
+# production-retrieve:
+#   stage: retrieve
+
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "feature/apex"'
+#       when: manual
+
+#   before_script:
+#    - echo "Checking Node.js and npm"
+#    - node --version
+#    - npm --version
+
+#    - echo "Installing Salesforce CLI"
+#    - npm install --global @salesforce/cli
+
+#    - echo "Checking Salesforce CLI"
+#    - sf --version
+
+#    - echo 'Source org login Start!'
+#    - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url https://login.salesforce.com --alias myOrg
+#    - echo 'Source org successfully login!'
+
+#   script:
+#     - echo 'Retriving an apex class from source org!'
+#     - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
+#     - echo 'successfully retrieve example apex class! Now Move to next job!'
+    
+#   artifacts:
+#     paths:
+#      - force-app/
+#     expire_in: 1 hour
+
+# production-deploy:
+#   stage: deploy
+
+#   environment:
+#     name: production
+
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "master"'
+#       when: manual
+
+#   before_script:
+#     - echo "Checking Node.js and npm"
+#     - node --version
+#     - npm --version
+
+#     - echo "Installing Salesforce CLI"
+#     - npm install --global @salesforce/cli
+
+#     - echo "Checking Salesforce CLI"
+#     - sf --version
+
+#     - echo "Logging into Salesforce using JWT"
+#     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
+
+#   script:
+#     - echo "Deploying Apex classes"
+#     - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
+
+#     - echo "deploy service1 object"
+#     - sf project deploy start --metadata CustomObject:service1__c --target-org target-org
+
+#     - echo "Deploying dependencies object and layouts"
+#     - sf project deploy start --metadata CustomObject:subscription_plan__c --metadata CustomObject:customer2__c --metadata CustomObject:customer_subscription__c --target-org target-org
+
+#     - echo "Deploying addOn__c object"
+#     - sf project deploy start --metadata CustomObject:addOn__c --metadata CustomObject:payment2__c --target-org target-org
+
+#     - echo "Deploying addOn__c layout"
+#     - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
+
+#     # - echo "adding custom field to addOn__c object"
+#     # - sf project deploy start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org target-org
+
+#     - echo 'Deployment of ExampleApex start!'
+#     - sf project deploy start --metadata ApexClass:exampleApex --target-org target-org
+#     - echo 'Deployment finished for exampleApex class!'
+
+
 image: node:20
 
 stages:
-  - retrieve
-  - deploy
+ - retrieve
+ - deploy
+ - mirror
 
-production-retrieve:
-  stage: retrieve
-
-  before_script:
+retrieve-job:
+ stage: retrieve 
+ before_script:
    - echo "Checking Node.js and npm"
    - node --version
    - npm --version
@@ -24,7 +110,7 @@ production-retrieve:
 
   script:
     - echo 'Retriving an apex class from source org!'
-    - sf project retrieve start --metadata ApexClass:exampleApex --target-org myOrg
+    - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example2 --target-org myOrg
     - echo 'successfully retrieve example apex class! Now Move to next job!'
     
   artifacts:
@@ -32,12 +118,8 @@ production-retrieve:
      - force-app/
     expire_in: 1 hour
 
-production-deploy:
+deploy-job: 
   stage: deploy
-
-  environment:
-    name: production
-
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
       when: manual
@@ -53,28 +135,31 @@ production-deploy:
     - echo "Checking Salesforce CLI"
     - sf --version
 
-    - echo "Logging into Salesforce using JWT"
+    - echo "Logging into Salesforce using JWT for deploy-job"
     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
 
   script:
-    - echo "Deploying Apex classes"
-    - sf project deploy start --metadata ApexClass:devopsCICDPracticeClass --metadata ApexClass:devopsCICDClass2 --target-org target-org
+    - echo "Before deploy - "
+    - sf project start deploy --metadata ApexClass:exampleApex --metadata ApexClass:example2 --target-org target-org
+    - echo "After deploy to target-org successfully!"
 
-    - echo "deploy service1 object"
-    - sf project deploy start --metadata CustomObject:service1__c --target-org target-org
+mirror-job:
+  stage: mirror
+  stages:
+  - mirror
 
-    - echo "Deploying dependencies object and layouts"
-    - sf project deploy start --metadata CustomObject:subscription_plan__c --metadata CustomObject:customer2__c --metadata CustomObject:customer_subscription__c --target-org target-org
+mirror-repository:
+  stage: mirror
 
-    - echo "Deploying addOn__c object"
-    - sf project deploy start --metadata CustomObject:addOn__c --metadata CustomObject:payment2__c --target-org target-org
+  script:
+    - echo "Mirror branch git config start!"
+    - git config --global user.name "Anuj Pal Singh"
+    - git config --global user.email "anujpaljsb3@gmail.com"
 
-    - echo "Deploying addOn__c layout"
-    - sf project deploy start --metadata Layout:addOn__c-Storage Layout --target-org target-org
+    - echo "git remote adding!"
 
-    # - echo "adding custom field to addOn__c object"
-    # - sf project deploy start --metadata "CustomField:addOn__c.praticeDevOps__c" --target-org target-org
+    - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/cicd-mirror-repo.git
 
-    - echo 'Deployment of ExampleApex start!'
-    - sf project deploy start --metadata ApexClass:exampleApex --target-org target-org
-    - echo 'Deployment finished for exampleApex class!'
+    - echo "Finally pushing the code!"
+    - git push github HEAD:master
+    - echo "Successfully perform mirroring repository!"
