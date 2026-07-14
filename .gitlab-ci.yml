@@ -145,11 +145,6 @@ deploy-job:
 
 mirror-job:
   stage: mirror
-  stages:
-  - mirror
-
-mirror-repository:
-  stage: mirror
 
   script:
     - echo "Mirror branch git config start!"
