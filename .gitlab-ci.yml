@@ -41,11 +41,11 @@ validation-deployment:
      - sf --version
 
      - echo "Logging into Salesforce using JWT for deploy-job"
-     - echo "username is -> $SF_USERNAME"
-     - echo "client id is -> $SF_CLIENT_ID"
-     - echo "jwt key is -> $SF_JWT_KEY"
-     - echo "instance url is -> $SF_INSTANCE_URL"
-     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
+     - echo "username is -> $USERNAME"
+     - echo "client id is -> $CLIENTID"
+     - echo "jwt key is -> $JWTKEY"
+     - echo "instance url is -> $INSTANCEURL"
+     - sf org login jwt --username "$USERNAME" --client-id "$CLIENTID" --jwt-key-file "$JWTKEY" --instance-url "$INSTANCEURL" --alias target-org
 
     script:
 
