@@ -27,9 +27,9 @@ pmd-checks:
        -R config/pmd-ruleset.xml \
        -f xml \
        -r pmd-report.xml
-
-    - echo "pmd scan completed!"
-    - echo "Exit code: $?"
+      
+      echo "pmd scan completed!"
+      echo "Exit code: $?"
   
   artifacts:
    when: always
