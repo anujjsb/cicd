@@ -1,3 +1,68 @@
+image: salesforce/cli:latest-full
+
+stages:
+ - scan
+ - test
+ - validationDeployment
+
+pmd-checks:
+  image:
+   name: pmdcode/pmd:7.24.0
+   entrypoint: [""]
+
+  stage: scan
+  before_script:
+   - echo "Checking Node.js and npm"
+   - node --version
+   - npm --version
+
+   - echo "Checking Salesforce CLI"
+   - sf --version
+
+  script:
+    - echo "pmd checks start"
+    - pmd check \
+      -d force-app\main\default\classes \
+      -R config\pmd-ruleset.xml \
+      -f xml \
+      -r pmd-report.xml
+
+    - echo "pmd scan completed!"
+  
+  artifacts:
+   when: always
+   paths: 
+    - pmd-report.xml
+   expire_in: 1 week
+
+
+validation-deployment:
+    stage: validationDeployment
+    before_script:
+     - echo "Checking Node.js and npm in validationDeployment!"
+     - node --version
+     - npm --version
+
+     - echo "Checking Salesforce CLI"
+     - sf --version
+
+     - echo "Logging into Salesforce using JWT for deploy-job"
+     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
+
+    script:
+
+     - echo "Before deploy - "
+     - echo "pmd report is -> "
+     - cat pmd-report.xml
+     - sf project deploy start --manifest manifest/package.xml --target-org target-org
+     - echo "After deploy to target-org successfully!"
+     - echo "Temp echo message!" 
+
+
+
+
+
+
 # image: node:20
 
 # stages:
@@ -84,85 +149,91 @@
 #     - echo 'Deployment finished for exampleApex class!'
 
 
-# image: node:20
-# image: salesforce/cli:latest-slim
-image: salesforce/cli:latest-full
 
-variables:
-  GIT_DEPTH: 0
 
-stages:
- - retrieve
- - deploy
- - mirror
 
-retrieve-job:
-  stage: retrieve
-  before_script:
-   - echo "Checking Node.js and npm"
-   - node --version
-   - npm --version
 
-   - echo "Installing Salesforce CLI"
-  #  - npm install --global @salesforce/cli
 
-   - echo "Checking Salesforce CLI"
-   - sf --version
 
-   - echo 'Source org login Start!'
-   - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url https://login.salesforce.com --alias myOrg
-   - echo 'Source org successfully login!'
+# # image: node:20
+# # image: salesforce/cli:latest-slim
+# image: salesforce/cli:latest-full
 
-  script:
-    - echo 'Retriving an apex class from source org!'
-    - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org myOrg
-    - echo 'successfully retrieve example apex class! Now Move to next job!'
-    
-  artifacts:
-    paths:
-     - force-app/
-    expire_in: 1 hour
+# variables:
+#   GIT_DEPTH: 0
 
-deploy-job: 
-  stage: deploy
-  # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "master"'
-  #     when: manual
+# stages:
+#  - retrieve
+#  - deploy
+#  - mirror
 
-  before_script:
-    - echo "Checking Node.js and npm"
-    - node --version
-    - npm --version
+# retrieve-job:
+#   stage: retrieve
+#   before_script:
+#    - echo "Checking Node.js and npm"
+#    - node --version
+#    - npm --version
 
-    - echo "Installing Salesforce CLI"
-    # - npm install --global @salesforce/cli
+#    - echo "Installing Salesforce CLI"
+#   #  - npm install --global @salesforce/cli
 
-    - echo "Checking Salesforce CLI"
-    - sf --version
+#    - echo "Checking Salesforce CLI"
+#    - sf --version
 
-    - echo "Logging into Salesforce using JWT for deploy-job"
-    - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
-
-  script:
-    - echo "Before deploy - "
-    - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org target-org
-    - echo "After deploy to target-org successfully!"
-    - echo "Temp echo message!"
-
-# mirror-job:
-#   stage: mirror
+#    - echo 'Source org login Start!'
+#    - sf org login jwt --username "$SOURCE_USERNAME" --client-id "$SOURCE_CLIENT_ID" --jwt-key-file "$SOURCE_JWT_KEY" --instance-url https://login.salesforce.com --alias myOrg
+#    - echo 'Source org successfully login!'
 
 #   script:
-#     - echo "Mirror branch git config start!"
-#     - git config --global user.name "Anuj Pal Singh"
-#     - git config --global user.email "anujpaljsb3@gmail.com"
+#     - echo 'Retriving an apex class from source org!'
+#     - sf project retrieve start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org myOrg
+#     - echo 'successfully retrieve example apex class! Now Move to next job!'
+    
+#   artifacts:
+#     paths:
+#      - force-app/
+#     expire_in: 1 hour
 
-#     - echo "git remote adding!"
+# deploy-job: 
+#   stage: deploy
+#   # rules:
+#   #   - if: '$CI_COMMIT_BRANCH == "master"'
+#   #     when: manual
 
-#     - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/cicd.git
-#       # https://github.com/anujpal-design/Copado-firstCopadoOrgSFP.git
-#     - echo "Finally pushing the code!"
-#     - git add force-app/
-#     - git commit -m 'retrieve latest metadata from org'
-#     - git push --force github HEAD:main
-#     - echo "Successfully perform mirroring repository!"
+#   before_script:
+#     - echo "Checking Node.js and npm"
+#     - node --version
+#     - npm --version
+
+#     - echo "Installing Salesforce CLI"
+#     # - npm install --global @salesforce/cli
+
+#     - echo "Checking Salesforce CLI"
+#     - sf --version
+
+#     - echo "Logging into Salesforce using JWT for deploy-job"
+#     - sf org login jwt --username "$SF_USERNAME" --client-id "$SF_CLIENT_ID" --jwt-key-file "$SF_JWT_KEY" --instance-url "$SF_INSTANCE_URL" --alias target-org
+
+#   script:
+#     - echo "Before deploy - "
+#     - sf project deploy start --metadata ApexClass:exampleApex --metadata ApexClass:example4 --target-org target-org
+#     - echo "After deploy to target-org successfully!"
+#     - echo "Temp echo message!"
+
+# # mirror-job:
+# #   stage: mirror
+
+# #   script:
+# #     - echo "Mirror branch git config start!"
+# #     - git config --global user.name "Anuj Pal Singh"
+# #     - git config --global user.email "anujpaljsb3@gmail.com"
+
+# #     - echo "git remote adding!"
+
+# #     - git remote add github https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/anujjsb/cicd.git
+# #       # https://github.com/anujpal-design/Copado-firstCopadoOrgSFP.git
+# #     - echo "Finally pushing the code!"
+# #     - git add force-app/
+# #     - git commit -m 'retrieve latest metadata from org'
+# #     - git push --force github HEAD:main
+# #     - echo "Successfully perform mirroring repository!"
