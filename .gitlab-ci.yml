@@ -2,7 +2,6 @@ image: salesforce/cli:latest-full
 
 stages:
  - scan
- - test
  - validationDeployment
 
 pmd-checks:
@@ -21,10 +20,8 @@ pmd-checks:
 
   script:
     - echo "pmd checks start"
-    - pmd check -d force-app/main/default/classes -R config/pmd-ruleset.xml -f xml -r pmd-report.xml
-      
+    - pmd check -d force-app/main/default/classes -R config/pmd-ruleset.xml -f xml -r pmd-report.xml 
     - echo "pmd scan completed!"
-    - echo "Exit code: $?"
   
   artifacts:
    when: always
