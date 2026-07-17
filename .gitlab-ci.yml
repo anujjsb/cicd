@@ -9,21 +9,20 @@ pmd-checks:
   image:
    name: pmdcode/pmd:7.24.0
    entrypoint: [""]
-
   stage: scan
-  before_script:
-   - echo "Checking Node.js and npm"
-   - node --version
-   - npm --version
+  # before_script:
+  #  - echo "Checking Node.js and npm"
+  #  - node --version
+  #  - npm --version
 
-   - echo "Checking Salesforce CLI"
-   - sf --version
+  #  - echo "Checking Salesforce CLI"
+  #  - sf --version
 
   script:
     - echo "pmd checks start"
     - pmd check \
-      -d force-app\main\default\classes \
-      -R config\pmd-ruleset.xml \
+      -d force-app/main/default/classes \
+      -R config/pmd-ruleset.xml \
       -f xml \
       -r pmd-report.xml
 
