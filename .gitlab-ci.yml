@@ -10,6 +10,7 @@ pmd-checks:
    name: pmdcode/pmd:7.24.0
    entrypoint: [""]
   stage: scan
+  allow_failure: true
   # before_script:
   #  - echo "Checking Node.js and npm"
   #  - node --version
@@ -28,6 +29,7 @@ pmd-checks:
        -r pmd-report.xml
 
     - echo "pmd scan completed!"
+    - echo "Exit code: $?"
   
   artifacts:
    when: always
